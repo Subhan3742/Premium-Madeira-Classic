@@ -9,22 +9,14 @@ datasource db {
 }
 
 model Product {
-  id                String   @id @default(cuid())
-  serialNumber      String   @unique
-  productName       String
-  model             String
-  category          String
-  description       String?
-  imageUrl          String?
-  price             Decimal  @db.Decimal(10, 2)
-  status            String   @default("Active")
-  manufacturingDate DateTime
-  warrantyStart     DateTime
-  warrantyEnd       DateTime
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  id           String   @id @default(cuid())
+  serialNumber String   @unique
+  productName  String
+  category     String
+  imageUrl     String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@index([category])
-  @@index([status])
   @@index([createdAt])
 }

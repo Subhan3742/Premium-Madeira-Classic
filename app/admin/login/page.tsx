@@ -53,7 +53,7 @@ export default function AdminLoginPage() {
       <div className="w-full max-w-sm animate-fade-in-up">
         <div className="mb-10 text-center">
           <p className="mb-3 text-xs font-semibold uppercase tracking-[0.3em] text-stone-400 dark:text-stone-500">
-            Admin Portal
+            Premium Madeira Classic
           </p>
           <h1 className="text-3xl font-light tracking-tight text-stone-900 dark:text-stone-50">
             Welcome Back
@@ -104,7 +104,7 @@ export default function AdminLoginPage() {
         </div>
 
         <p className="mt-6 text-center text-xs text-stone-300 dark:text-stone-600">
-          Serial Verify &mdash; Admin Only
+          Premium Madeira Classic &mdash; Admin Only
         </p>
       </div>
     </div>

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AdminShell } from "@/components/admin/admin-shell";
-import { formatDate, formatPrice } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import type { DashboardStats, Product } from "@/types";
 
 export default function DashboardPage() {
@@ -46,7 +46,7 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <Card key={i}>
               <CardContent className="pt-7">
@@ -58,22 +58,22 @@ export default function DashboardPage() {
         </div>
       ) : stats ? (
         <>
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
             {[
               { title: "Total Products", value: stats.total, icon: "□" },
-              { title: "Active", value: stats.active, color: "text-emerald-600 dark:text-emerald-400", icon: "●" },
-              { title: "Expired", value: stats.expired, color: "text-red-500 dark:text-red-400", icon: "○" },
-              { title: "Inactive", value: stats.inactive, color: "text-stone-400", icon: "◌" },
+              { title: "Categories", value: stats.categories, icon: "◇" },
+              { title: "With Image", value: stats.withImage, color: "text-emerald-600 dark:text-emerald-400", icon: "●" },
+              { title: "Added (30 days)", value: stats.addedLast30Days, icon: "○" },
             ].map((stat, i) => (
               <Card key={stat.title} className={`animate-fade-in-up stagger-${i + 1} opacity-0 hover:shadow-md`}>
                 <CardContent className="pt-7">
                   <div className="flex items-center justify-between">
-                    <p className="text-xs font-semibold uppercase tracking-[0.15em] text-stone-400 dark:text-stone-500">
+                    <p className="text-[10px] font-semibold uppercase tracking-wider text-stone-400 dark:text-stone-500 sm:text-xs sm:tracking-[0.15em]">
                       {stat.title}
                     </p>
                     <span className="text-stone-200 dark:text-stone-700">{stat.icon}</span>
                   </div>
-                  <p className={`mt-2 text-3xl font-light tracking-tight ${stat.color || "text-stone-900 dark:text-stone-50"}`}>
+                  <p className={`mt-2 text-2xl font-light tracking-tight sm:text-3xl ${stat.color || "text-stone-900 dark:text-stone-50"}`}>
                     {stat.value}
                   </p>
                 </CardContent>
@@ -93,26 +93,20 @@ export default function DashboardPage() {
                   No products yet
                 </p>
               ) : (
-                <div className="overflow-x-auto -mx-7 px-7">
+                <div className="-mx-5 overflow-x-auto px-5 sm:-mx-7 sm:px-7">
                   <table className="w-full text-sm">
                     <thead>
                       <tr className="border-b border-stone-100 dark:border-stone-800">
                         <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
                           Product
                         </th>
-                        <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
+                        <th className="pb-3 pl-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
                           Serial
                         </th>
-                        <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden sm:table-cell">
+                        <th className="pb-3 pl-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
                           Category
                         </th>
-                        <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
-                          Status
-                        </th>
-                        <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden md:table-cell">
-                          Price
-                        </th>
-                        <th className="pb-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden lg:table-cell">
+                        <th className="pb-3 pl-3 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden md:table-cell">
                           Added
                         </th>
                       </tr>
@@ -124,27 +118,22 @@ export default function DashboardPage() {
                           className="border-b border-stone-50 transition-colors hover:bg-stone-50/50 dark:border-stone-800/30 dark:hover:bg-stone-800/30"
                         >
                           <td className="py-3.5 font-medium text-stone-800 dark:text-stone-100">
-                            {p.productName}
+                            <div className="flex items-center gap-3">
+                              {p.imageUrl ? (
+                                <img src={p.imageUrl} alt="" className="h-9 w-9 shrink-0 rounded-md object-cover" />
+                              ) : (
+                                <div className="h-9 w-9 shrink-0 rounded-md bg-stone-100 dark:bg-stone-800" />
+                              )}
+                              <span>{p.productName}</span>
+                            </div>
                           </td>
-                          <td className="py-3.5 font-mono text-xs text-stone-500 dark:text-stone-400">
+                          <td className="whitespace-nowrap py-3.5 pl-3 font-mono text-xs text-stone-500 dark:text-stone-400">
                             {p.serialNumber}
                           </td>
-                          <td className="py-3.5 text-stone-500 dark:text-stone-400 hidden sm:table-cell">
-                            {p.category}
+                          <td className="py-3.5 pl-3">
+                            <Badge variant="secondary">{p.category}</Badge>
                           </td>
-                          <td className="py-3.5">
-                            <Badge
-                              variant={
-                                p.status === "Active" ? "success" : p.status === "Expired" ? "destructive" : "secondary"
-                              }
-                            >
-                              {p.status}
-                            </Badge>
-                          </td>
-                          <td className="py-3.5 text-stone-500 dark:text-stone-400 hidden md:table-cell">
-                            {formatPrice(p.price)}
-                          </td>
-                          <td className="py-3.5 text-stone-400 dark:text-stone-500 hidden lg:table-cell">
+                          <td className="whitespace-nowrap py-3.5 pl-3 text-stone-400 dark:text-stone-500 hidden md:table-cell">
                             {formatDate(p.createdAt)}
                           </td>
                         </tr>

@@ -12,7 +12,6 @@ export async function GET(request: NextRequest) {
     const pageSize = parseInt(searchParams.get("pageSize") || "10");
     const search = searchParams.get("search")?.trim();
     const category = searchParams.get("category");
-    const status = searchParams.get("status");
 
     const where: Record<string, unknown> = {};
 
@@ -20,12 +19,10 @@ export async function GET(request: NextRequest) {
       where.OR = [
         { serialNumber: { contains: search, mode: "insensitive" } },
         { productName: { contains: search, mode: "insensitive" } },
-        { model: { contains: search, mode: "insensitive" } },
       ];
     }
 
     if (category) where.category = category;
-    if (status) where.status = status;
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({

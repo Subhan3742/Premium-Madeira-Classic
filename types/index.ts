@@ -2,15 +2,8 @@ export interface Product {
   id: string;
   serialNumber: string;
   productName: string;
-  model: string;
   category: string;
-  description: string | null;
   imageUrl: string | null;
-  price: number | string;
-  status: string;
-  manufacturingDate: string;
-  warrantyStart: string;
-  warrantyEnd: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -25,9 +18,8 @@ export interface ProductsResponse {
 
 export interface DashboardStats {
   total: number;
-  active: number;
-  inactive: number;
-  expired: number;
-  blocked: number;
+  categories: number;
+  withImage: number;
+  addedLast30Days: number;
   recentProducts: Product[];
 }

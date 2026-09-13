@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Product Serial Number Lookup",
-  description: "Look up product details by serial number",
+  title: "Premium Madeira Classic",
+  description: "Premium Madeira Classic — product verification by serial number",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

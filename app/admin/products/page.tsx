@@ -12,8 +12,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AdminShell } from "@/components/admin/admin-shell";
 import { DeleteDialog } from "@/components/products/delete-dialog";
 import { useToast } from "@/components/ui/toast";
-import { formatDate, formatPrice, getWarrantyStatus } from "@/lib/utils";
-import { CATEGORIES, STATUSES } from "@/lib/validations";
+import { formatDate } from "@/lib/utils";
+import { CATEGORIES } from "@/lib/validations";
 import type { Product, ProductsResponse } from "@/types";
 
 export default function ProductsPage() {
@@ -24,7 +24,6 @@ export default function ProductsPage() {
   const [page, setPage] = React.useState(1);
   const [search, setSearch] = React.useState("");
   const [category, setCategory] = React.useState("");
-  const [status, setStatus] = React.useState("");
   const [deleteProduct, setDeleteProduct] = React.useState<Product | null>(null);
   const [deleting, setDeleting] = React.useState(false);
 
@@ -34,7 +33,6 @@ export default function ProductsPage() {
       const params = new URLSearchParams({ page: String(page), pageSize: "10" });
       if (search) params.set("search", search);
       if (category) params.set("category", category);
-      if (status) params.set("status", status);
 
       const res = await fetch(`/api/products?${params}`);
       if (res.status === 401) {
@@ -49,7 +47,7 @@ export default function ProductsPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, search, category, status, router, toast]);
+  }, [page, search, category, router, toast]);
 
   React.useEffect(() => {
     fetchProducts();
@@ -94,8 +92,8 @@ export default function ProductsPage() {
             Products
           </h1>
         </div>
-        <Link href="/admin/products/new">
-          <Button>
+        <Link href="/admin/products/new" className="w-full sm:w-auto">
+          <Button className="w-full sm:w-auto">
             <svg className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
             </svg>
@@ -140,18 +138,6 @@ export default function ProductsPage() {
                 <option key={c} value={c}>{c}</option>
               ))}
             </Select>
-            <Select
-              value={status}
-              onChange={(e) => {
-                setStatus(e.target.value);
-                setPage(1);
-              }}
-            >
-              <option value="">All Statuses</option>
-              {STATUSES.map((s) => (
-                <option key={s} value={s}>{s}</option>
-              ))}
-            </Select>
             <Button type="submit" variant="secondary">
               Search
             </Button>
@@ -163,7 +149,7 @@ export default function ProductsPage() {
       <Card>
         <CardContent className="p-0">
           {loading ? (
-            <div className="p-7 space-y-4">
+            <div className="space-y-4 p-4 sm:p-7">
               {[...Array(5)].map((_, i) => (
                 <Skeleton key={i} className="h-14 w-full" />
               ))}
@@ -184,7 +170,53 @@ export default function ProductsPage() {
             </div>
           ) : (
             <>
-              <div className="overflow-x-auto">
+              <ul className="divide-y divide-stone-100 dark:divide-stone-800 md:hidden">
+                {data.products.map((product) => (
+                  <li key={product.id} className="flex gap-4 p-4">
+                    {product.imageUrl ? (
+                      <img
+                        src={product.imageUrl}
+                        alt=""
+                        className="h-14 w-14 shrink-0 rounded-lg object-cover shadow-sm"
+                      />
+                    ) : (
+                      <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-stone-50 dark:bg-stone-800">
+                        <svg className="h-5 w-5 text-stone-300 dark:text-stone-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                      </div>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <p className="line-clamp-2 font-medium leading-snug text-stone-800 dark:text-stone-100">
+                        {product.productName}
+                      </p>
+                      <p className="mt-0.5 font-mono text-xs text-stone-500 dark:text-stone-400">
+                        {product.serialNumber}
+                      </p>
+                      <div className="mt-3 flex items-center justify-between gap-2">
+                        <Badge variant="secondary">{product.category}</Badge>
+                        <div className="flex gap-1">
+                          <Link href={`/admin/products/edit/${product.id}`}>
+                            <Button variant="ghost" size="sm">
+                              Edit
+                            </Button>
+                          </Link>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="text-red-500 hover:bg-red-50 hover:text-red-700 dark:hover:bg-red-950"
+                            onClick={() => setDeleteProduct(product)}
+                          >
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="hidden overflow-x-auto md:block">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="border-b border-stone-100 dark:border-stone-800">
@@ -197,20 +229,11 @@ export default function ProductsPage() {
                       <th className="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
                         Serial
                       </th>
-                      <th className="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden md:table-cell">
-                        Model
-                      </th>
-                      <th className="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden lg:table-cell">
+                      <th className="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
                         Category
                       </th>
-                      <th className="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400">
-                        Status
-                      </th>
                       <th className="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden lg:table-cell">
-                        Warranty
-                      </th>
-                      <th className="px-4 py-4 text-left text-[11px] font-semibold uppercase tracking-wider text-stone-400 hidden xl:table-cell">
-                        Created
+                        Added
                       </th>
                       <th className="px-7 py-4 text-right text-[11px] font-semibold uppercase tracking-wider text-stone-400">
                         Actions
@@ -241,42 +264,13 @@ export default function ProductsPage() {
                         <td className="px-4 py-3.5 font-medium text-stone-800 dark:text-stone-100">
                           {product.productName}
                         </td>
-                        <td className="px-4 py-3.5 font-mono text-xs text-stone-500 dark:text-stone-400">
+                        <td className="whitespace-nowrap px-4 py-3.5 font-mono text-xs text-stone-500 dark:text-stone-400">
                           {product.serialNumber}
                         </td>
-                        <td className="px-4 py-3.5 text-stone-500 dark:text-stone-400 hidden md:table-cell">
-                          {product.model}
-                        </td>
-                        <td className="px-4 py-3.5 text-stone-500 dark:text-stone-400 hidden lg:table-cell">
-                          {product.category}
-                        </td>
                         <td className="px-4 py-3.5">
-                          <Badge
-                            variant={
-                              product.status === "Active"
-                                ? "success"
-                                : product.status === "Expired"
-                                  ? "destructive"
-                                  : product.status === "Blocked"
-                                    ? "warning"
-                                    : "secondary"
-                            }
-                          >
-                            {product.status}
-                          </Badge>
+                          <Badge variant="secondary">{product.category}</Badge>
                         </td>
-                        <td className="px-4 py-3.5 hidden lg:table-cell">
-                          <Badge
-                            variant={
-                              getWarrantyStatus(product.warrantyEnd) === "Active"
-                                ? "success"
-                                : "destructive"
-                            }
-                          >
-                            {getWarrantyStatus(product.warrantyEnd)}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3.5 text-stone-400 dark:text-stone-500 hidden xl:table-cell">
+                        <td className="whitespace-nowrap px-4 py-3.5 text-stone-400 dark:text-stone-500 hidden lg:table-cell">
                           {formatDate(product.createdAt)}
                         </td>
                         <td className="px-7 py-3.5">
@@ -303,7 +297,7 @@ export default function ProductsPage() {
               </div>
 
               {data.totalPages > 1 && (
-                <div className="flex items-center justify-between border-t border-stone-100 px-7 py-5 dark:border-stone-800">
+                <div className="flex flex-col gap-3 border-t border-stone-100 px-4 py-4 dark:border-stone-800 sm:flex-row sm:items-center sm:justify-between sm:px-7 sm:py-5">
                   <p className="text-xs text-stone-400">
                     Page {data.page} of {data.totalPages} &middot; {data.total} products
                   </p>

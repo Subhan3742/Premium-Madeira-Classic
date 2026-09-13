@@ -6,13 +6,15 @@ export async function GET() {
   try {
     await requireAuth();
 
-    const [total, active, inactive, expired, blocked, recentProducts] =
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const [total, categoryGroups, withImage, addedLast30Days, recentProducts] =
       await Promise.all([
         prisma.product.count(),
-        prisma.product.count({ where: { status: "Active" } }),
-        prisma.product.count({ where: { status: "Inactive" } }),
-        prisma.product.count({ where: { status: "Expired" } }),
-        prisma.product.count({ where: { status: "Blocked" } }),
+        prisma.product.groupBy({ by: ["category"] }),
+        prisma.product.count({ where: { imageUrl: { not: null } } }),
+        prisma.product.count({ where: { createdAt: { gte: thirtyDaysAgo } } }),
         prisma.product.findMany({
           orderBy: { createdAt: "desc" },
           take: 5,
@@ -21,10 +23,9 @@ export async function GET() {
 
     return NextResponse.json({
       total,
-      active,
-      inactive,
-      expired,
-      blocked,
+      categories: categoryGroups.length,
+      withImage,
+      addedLast30Days,
       recentProducts,
     });
   } catch (error) {

@@ -5,21 +5,15 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Select } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ImageUpload } from "@/components/products/image-upload";
 import { useToast } from "@/components/ui/toast";
-import { CATEGORIES, STATUSES } from "@/lib/validations";
+import { CATEGORIES } from "@/lib/validations";
 import type { Product } from "@/types";
 
 interface ProductFormProps {
   product?: Product;
-}
-
-function toDateInputValue(date: string | Date | undefined) {
-  if (!date) return "";
-  return new Date(date).toISOString().split("T")[0];
 }
 
 export function ProductForm({ product }: ProductFormProps) {
@@ -35,8 +29,7 @@ export function ProductForm({ product }: ProductFormProps) {
   function handleImageSelect(file: File) {
     setImageFile(file);
     setRemoveImage(false);
-    const url = URL.createObjectURL(file);
-    setPreviewUrl(url);
+    setPreviewUrl(URL.createObjectURL(file));
   }
 
   function handleImageRemove() {
@@ -54,19 +47,10 @@ export function ProductForm({ product }: ProductFormProps) {
       const data = {
         serialNumber: formData.get("serialNumber") as string,
         productName: formData.get("productName") as string,
-        model: formData.get("model") as string,
         category: formData.get("category") as string,
-        description: formData.get("description") as string,
-        price: parseFloat(formData.get("price") as string),
-        status: formData.get("status") as string,
-        manufacturingDate: formData.get("manufacturingDate") as string,
-        warrantyStart: formData.get("warrantyStart") as string,
-        warrantyEnd: formData.get("warrantyEnd") as string,
       };
 
-      const url = isEditing
-        ? `/api/products/${product.id}`
-        : "/api/products";
+      const url = isEditing ? `/api/products/${product.id}` : "/api/products";
       const method = isEditing ? "PUT" : "POST";
 
       const res = await fetch(url, {
@@ -130,18 +114,14 @@ export function ProductForm({ product }: ProductFormProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Product Information */}
-          <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
-              Product Information
-            </p>
-            <div className="grid gap-5 sm:grid-cols-2">
+          <div className="grid gap-8 lg:grid-cols-[1fr_280px]">
+            <div className="space-y-5">
               <div className="space-y-2">
                 <Label htmlFor="productName">Product Name</Label>
                 <Input
                   id="productName"
                   name="productName"
-                  placeholder="e.g. Samsung QLED TV"
+                  placeholder="e.g. Classic Oak Dining Table"
                   defaultValue={product?.productName}
                   required
                 />
@@ -151,20 +131,10 @@ export function ProductForm({ product }: ProductFormProps) {
                 <Input
                   id="serialNumber"
                   name="serialNumber"
-                  placeholder="e.g. SN-TV-001"
+                  placeholder="e.g. PMC-001"
                   defaultValue={product?.serialNumber}
                   required
                   className="font-mono"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="model">Model</Label>
-                <Input
-                  id="model"
-                  name="model"
-                  placeholder="e.g. QN65Q80C"
-                  defaultValue={product?.model}
-                  required
                 />
               </div>
               <div className="space-y-2">
@@ -181,105 +151,22 @@ export function ProductForm({ product }: ProductFormProps) {
                   ))}
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="price">Price</Label>
-                <Input
-                  id="price"
-                  name="price"
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  defaultValue={product ? Number(product.price) : ""}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  id="status"
-                  name="status"
-                  defaultValue={product?.status || "Active"}
-                  required
-                >
-                  {STATUSES.map((s) => (
-                    <option key={s} value={s}>{s}</option>
-                  ))}
-                </Select>
-              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Product Image</Label>
+              <ImageUpload
+                currentImageUrl={removeImage ? null : product?.imageUrl}
+                onImageSelect={handleImageSelect}
+                onImageRemove={handleImageRemove}
+                previewUrl={previewUrl}
+                disabled={loading}
+              />
             </div>
           </div>
 
-          {/* Dates */}
-          <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
-              Dates &amp; Warranty
-            </p>
-            <div className="grid gap-5 sm:grid-cols-3">
-              <div className="space-y-2">
-                <Label htmlFor="manufacturingDate">Manufacturing Date</Label>
-                <Input
-                  id="manufacturingDate"
-                  name="manufacturingDate"
-                  type="date"
-                  defaultValue={toDateInputValue(product?.manufacturingDate)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="warrantyStart">Warranty Start</Label>
-                <Input
-                  id="warrantyStart"
-                  name="warrantyStart"
-                  type="date"
-                  defaultValue={toDateInputValue(product?.warrantyStart)}
-                  required
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="warrantyEnd">Warranty End</Label>
-                <Input
-                  id="warrantyEnd"
-                  name="warrantyEnd"
-                  type="date"
-                  defaultValue={toDateInputValue(product?.warrantyEnd)}
-                  required
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Description */}
-          <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
-              Description
-            </p>
-            <Textarea
-              id="description"
-              name="description"
-              rows={4}
-              placeholder="Product description (optional)"
-              defaultValue={product?.description || ""}
-            />
-          </div>
-
-          {/* Image */}
-          <div>
-            <p className="mb-4 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
-              Product Image
-            </p>
-            <ImageUpload
-              currentImageUrl={removeImage ? null : product?.imageUrl}
-              onImageSelect={handleImageSelect}
-              onImageRemove={handleImageRemove}
-              previewUrl={previewUrl}
-              disabled={loading}
-            />
-          </div>
-
-          {/* Actions */}
-          <div className="flex gap-3 border-t border-stone-100 pt-6 dark:border-stone-800">
-            <Button type="submit" disabled={loading}>
+          <div className="flex flex-col-reverse gap-3 border-t border-stone-100 pt-6 dark:border-stone-800 sm:flex-row">
+            <Button type="submit" disabled={loading} className="w-full sm:w-auto">
               {loading ? (
                 <span className="inline-flex items-center gap-2">
                   <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
@@ -294,6 +181,7 @@ export function ProductForm({ product }: ProductFormProps) {
             <Button
               type="button"
               variant="outline"
+              className="w-full sm:w-auto"
               onClick={() => router.push("/admin/products")}
             >
               Cancel

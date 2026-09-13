@@ -4,11 +4,15 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDate, formatPrice, getWarrantyStatus } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import type { Product } from "@/types";
+
+const headerLinks = [
+  { href: "/admin/dashboard", label: "Dashboard" },
+  { href: "/admin/products", label: "Products" },
+];
 
 export default function HomePage() {
   const router = useRouter();
@@ -65,39 +69,50 @@ export default function HomePage() {
     }
   }
 
-  const warrantyStatus = product
-    ? getWarrantyStatus(product.warrantyEnd)
-    : null;
-
   return (
     <div className="min-h-screen">
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-xl">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-          <span className="text-sm font-semibold uppercase tracking-[0.2em] text-white drop-shadow-sm">
-            Serial Verify
+        <div className="mx-auto flex h-12 max-w-6xl items-center justify-center px-4 sm:h-16 sm:justify-between sm:px-6">
+          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.15em] text-white drop-shadow-sm sm:text-sm sm:tracking-[0.2em]">
+            Premium Madeira Classic
           </span>
-          <div className="flex items-center gap-4">
-            <a
-              href="/admin/dashboard"
-              className="text-xs font-medium uppercase tracking-widest text-white/60 transition-colors hover:text-white"
-            >
-              Dashboard
-            </a>
-            <a
-              href="/admin/products"
-              className="text-xs font-medium uppercase tracking-widest text-white/60 transition-colors hover:text-white"
-            >
-              Products
-            </a>
+          <div className="hidden items-center gap-5 sm:flex">
+            {headerLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-xs font-medium uppercase tracking-widest text-white/60 transition-colors hover:text-white"
+              >
+                {link.label}
+              </a>
+            ))}
             <button
               onClick={handleLogout}
               disabled={loggingOut}
-              className="text-xs font-medium uppercase tracking-widest text-white/60 transition-colors hover:text-white disabled:opacity-50"
+              className="rounded-md border border-white/20 px-2.5 py-1 text-xs font-medium uppercase tracking-widest text-white/80 transition-colors hover:border-white/40 hover:text-white disabled:opacity-50"
             >
               {loggingOut ? "..." : "Logout"}
             </button>
           </div>
+        </div>
+        <div className="flex items-center justify-center gap-5 pb-2.5 sm:hidden">
+          {headerLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-[11px] font-medium uppercase tracking-wider text-white/60 transition-colors hover:text-white"
+            >
+              {link.label}
+            </a>
+          ))}
+          <button
+            onClick={handleLogout}
+            disabled={loggingOut}
+            className="rounded-md border border-white/20 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-white/80 transition-colors hover:border-white/40 hover:text-white disabled:opacity-50"
+          >
+            {loggingOut ? "..." : "Logout"}
+          </button>
         </div>
       </header>
 
@@ -115,7 +130,7 @@ export default function HomePage() {
         </video>
         <div className="absolute inset-0 bg-black/40 z-[1]" />
 
-        <div className="relative z-10 mx-auto max-w-2xl px-6 text-center pt-16">
+        <div className="relative z-10 mx-auto max-w-2xl px-4 pt-24 text-center sm:px-6 sm:pt-16">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
@@ -142,8 +157,8 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
           >
-            Enter your serial number to verify authenticity and explore
-            product details, warranty status, and more.
+            Enter a serial number to confirm the product is a genuine
+            Premium Madeira Classic piece and view its registered details.
           </motion.p>
 
           <motion.div
@@ -174,12 +189,12 @@ export default function HomePage() {
                   placeholder="Enter serial number..."
                   value={serialNumber}
                   onChange={(e) => setSerialNumber(e.target.value)}
-                  className="h-14 flex-1 bg-transparent px-4 text-base text-stone-800 placeholder:text-stone-400 focus:outline-none sm:h-16 sm:text-lg dark:text-stone-100 dark:placeholder:text-stone-500"
+                  className="h-14 min-w-0 flex-1 bg-transparent px-3 text-base text-stone-800 placeholder:text-stone-400 focus:outline-none sm:h-16 sm:px-4 sm:text-lg dark:text-stone-100 dark:placeholder:text-stone-500"
                 />
                 <button
                   type="submit"
                   disabled={loading || !serialNumber.trim()}
-                  className="mr-2 flex h-10 items-center gap-2 rounded-xl bg-stone-900 px-5 text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-stone-800 active:scale-95 disabled:opacity-30 sm:mr-3 sm:h-11 sm:px-6 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200"
+                  className="mr-2 flex h-10 shrink-0 items-center gap-2 rounded-xl bg-stone-900 px-4 text-sm font-medium tracking-wide text-white transition-all duration-300 hover:bg-stone-800 active:scale-95 disabled:opacity-30 sm:mr-3 sm:h-11 sm:px-6 dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200"
                 >
                   {loading ? (
                     <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white dark:border-stone-900/30 dark:border-t-stone-900" />
@@ -216,7 +231,7 @@ export default function HomePage() {
       </section>
 
       {/* Results */}
-      <section className="mx-auto max-w-3xl px-6 pb-24 bg-cream dark:bg-stone-950">
+      <section className="mx-auto max-w-3xl bg-cream px-4 pb-16 dark:bg-stone-950 sm:px-6 sm:pb-24">
         <AnimatePresence mode="wait">
           {loading && (
             <motion.div
@@ -334,13 +349,13 @@ export default function HomePage() {
                   <img
                     src={product.imageUrl}
                     alt={product.productName}
-                    className="h-72 w-full object-contain p-6 transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-96"
+                    className="h-56 w-full object-contain p-4 transition-transform duration-700 ease-out group-hover:scale-[1.03] sm:h-96 sm:p-6"
                   />
                 </motion.div>
               )}
 
               {/* Product Header */}
-              <div className="border-b border-stone-100 px-8 py-7 dark:border-stone-800">
+              <div className="border-b border-stone-100 px-5 py-5 dark:border-stone-800 sm:px-8 sm:py-7">
                 <motion.div
                   className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
                   initial={{ opacity: 0, y: 12 }}
@@ -351,39 +366,18 @@ export default function HomePage() {
                     <p className="mb-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
                       Product
                     </p>
-                    <h2 className="text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl dark:text-stone-50">
+                    <h2 className="text-xl font-semibold tracking-tight text-stone-900 sm:text-3xl dark:text-stone-50">
                       {product.productName}
                     </h2>
                   </div>
-                  <div className="flex gap-2">
-                    <Badge
-                      variant={
-                        product.status === "Active"
-                          ? "success"
-                          : product.status === "Inactive"
-                            ? "secondary"
-                            : product.status === "Blocked"
-                              ? "destructive"
-                              : "warning"
-                      }
-                    >
-                      {product.status}
-                    </Badge>
-                    <Badge
-                      variant={
-                        warrantyStatus === "Active" ? "success" : "destructive"
-                      }
-                    >
-                      Warranty {warrantyStatus}
-                    </Badge>
-                  </div>
+                  <Badge variant="success">Verified Authentic</Badge>
                 </motion.div>
               </div>
 
               {/* Product Details Grid */}
-              <div className="px-8 py-7">
+              <div className="px-5 py-5 sm:px-8 sm:py-7">
                 <motion.div
-                  className="grid gap-6 sm:grid-cols-2"
+                  className="grid gap-3 sm:grid-cols-2 sm:gap-6"
                   initial="hidden"
                   animate="visible"
                   variants={{
@@ -391,35 +385,11 @@ export default function HomePage() {
                     visible: { transition: { staggerChildren: 0.06, delayChildren: 0.3 } },
                   }}
                 >
-                  <DetailItem label="Serial Number" value={product.serialNumber} />
-                  <DetailItem label="Model" value={product.model} />
+                  <DetailItem label="Serial Number" value={product.serialNumber} mono />
                   <DetailItem label="Category" value={product.category} />
-                  <DetailItem label="Price" value={formatPrice(product.price)} />
-                  <DetailItem label="Manufacturing Date" value={formatDate(product.manufacturingDate)} />
-                  <DetailItem label="Warranty Start" value={formatDate(product.warrantyStart)} />
-                  <DetailItem label="Warranty Until" value={formatDate(product.warrantyEnd)} />
-                  <DetailItem
-                    label="Warranty Status"
-                    value={warrantyStatus || ""}
-                    highlight={warrantyStatus === "Active" ? "success" : "danger"}
-                  />
+                  <DetailItem label="Registered On" value={formatDate(product.createdAt)} />
+                  <DetailItem label="Status" value="Genuine Product" highlight="success" />
                 </motion.div>
-
-                {product.description && (
-                  <motion.div
-                    className="mt-8 border-t border-stone-100 pt-6 dark:border-stone-800"
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.6, duration: 0.5 }}
-                  >
-                    <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400 dark:text-stone-500">
-                      Description
-                    </p>
-                    <p className="text-sm leading-relaxed text-stone-600 dark:text-stone-300">
-                      {product.description}
-                    </p>
-                  </motion.div>
-                )}
               </div>
             </motion.div>
           )}
@@ -441,12 +411,12 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t border-stone-200/40 bg-cream dark:border-stone-800/40 dark:bg-stone-950">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-8">
-          <span className="text-xs font-medium uppercase tracking-[0.15em] text-stone-300 dark:text-stone-600">
-            Serial Verify
+        <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-6 text-center sm:flex-row sm:justify-between sm:px-6 sm:py-8 sm:text-left">
+          <span className="text-xs font-medium uppercase tracking-[0.15em] text-stone-400 dark:text-stone-500">
+            Premium Madeira Classic
           </span>
           <span className="text-xs text-stone-300 dark:text-stone-600">
-            &copy; {new Date().getFullYear()}
+            &copy; {new Date().getFullYear()} Premium Madeira Classic. All rights reserved.
           </span>
         </div>
       </footer>
@@ -458,14 +428,16 @@ function DetailItem({
   label,
   value,
   highlight,
+  mono,
 }: {
   label: string;
   value: string;
   highlight?: "success" | "danger";
+  mono?: boolean;
 }) {
   return (
     <motion.div
-      className="rounded-xl bg-stone-50/50 px-5 py-4 dark:bg-stone-800/30"
+      className="rounded-xl bg-stone-50/50 px-4 py-3 dark:bg-stone-800/30 sm:px-5 sm:py-4"
       variants={{
         hidden: { opacity: 0, y: 10 },
         visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } },
@@ -475,13 +447,13 @@ function DetailItem({
         {label}
       </p>
       <p
-        className={
+        className={`${
           highlight === "success"
             ? "text-sm font-semibold text-emerald-600 dark:text-emerald-400"
             : highlight === "danger"
               ? "text-sm font-semibold text-red-600 dark:text-red-400"
               : "text-sm font-medium text-stone-800 dark:text-stone-100"
-        }
+        }${mono ? " font-mono" : ""}`}
       >
         {value}
       </p>

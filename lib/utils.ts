@@ -12,17 +12,3 @@ export function formatDate(date: string | Date) {
     day: "numeric",
   });
 }
-
-export function formatPrice(price: number | string) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(Number(price));
-}
-
-export function getWarrantyStatus(warrantyEnd: string | Date) {
-  const end = new Date(warrantyEnd);
-  const now = new Date();
-  if (end > now) return "Active";
-  return "Expired";
-}

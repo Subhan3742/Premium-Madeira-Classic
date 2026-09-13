@@ -26,6 +26,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  function isActive(href: string) {
+    return href === "/" ? pathname === "/" : pathname.startsWith(href);
+  }
+
   async function handleLogout() {
     setLoggingOut(true);
     await fetch("/api/auth/logout", { method: "POST" });
@@ -44,13 +48,13 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
             : "border-transparent"
         )}
       >
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
+        <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:h-16 sm:px-6">
           <div className="flex items-center gap-8">
             <Link
               href="/admin/dashboard"
-              className="text-sm font-semibold uppercase tracking-[0.15em] text-stone-800 transition-colors hover:text-stone-600 dark:text-stone-200 dark:hover:text-stone-400"
+              className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.15em] text-stone-800 transition-colors hover:text-stone-600 dark:text-stone-200 dark:hover:text-stone-400"
             >
-              Admin Panel
+              Premium Madeira Classic
             </Link>
             <nav className="hidden items-center gap-1 sm:flex">
               {navItems.map((item) => (
@@ -59,7 +63,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                   href={item.href}
                   className={cn(
                     "rounded-lg px-4 py-2 text-sm font-medium tracking-wide transition-all duration-200",
-                    item.href === "/" ? pathname === "/" : pathname.startsWith(item.href)
+                    isActive(item.href)
                       ? "bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-stone-50"
                       : "text-stone-500 hover:bg-stone-50 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-800/50 dark:hover:text-stone-200"
                   )}
@@ -69,25 +73,33 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               ))}
             </nav>
           </div>
-          <div className="flex items-center gap-5">
-            <Link
-              href="/"
-              className="text-xs font-medium uppercase tracking-widest text-stone-400 transition-colors hover:text-stone-600 dark:text-stone-500 dark:hover:text-stone-300"
-            >
-              Search
-            </Link>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleLogout}
-              disabled={loggingOut}
-            >
-              {loggingOut ? "Logging out..." : "Logout"}
-            </Button>
-          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleLogout}
+            disabled={loggingOut}
+          >
+            {loggingOut ? "Logging out..." : "Logout"}
+          </Button>
         </div>
+        <nav className="flex gap-1 overflow-x-auto px-4 pb-2 sm:hidden">
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={cn(
+                "whitespace-nowrap rounded-lg px-3.5 py-1.5 text-sm font-medium tracking-wide transition-all duration-200",
+                isActive(item.href)
+                  ? "bg-stone-100 text-stone-900 dark:bg-stone-800 dark:text-stone-50"
+                  : "text-stone-500 hover:bg-stone-50 hover:text-stone-800 dark:text-stone-400 dark:hover:bg-stone-800/50 dark:hover:text-stone-200"
+              )}
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
       </header>
-      <main className="mx-auto max-w-7xl px-6 py-8 animate-fade-in">
+      <main className="mx-auto max-w-7xl px-4 py-6 animate-fade-in sm:px-6 sm:py-8">
         {children}
       </main>
     </div>
