@@ -69,6 +69,7 @@ export async function POST(
       });
 
     if (uploadError) {
+      console.error("Supabase image upload failed:", uploadError);
       return NextResponse.json(
         { error: "Failed to upload image" },
         { status: 500 }
@@ -89,6 +90,7 @@ export async function POST(
     if (error instanceof Error && error.message === "Unauthorized") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
+    console.error("Image upload route error:", error);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }

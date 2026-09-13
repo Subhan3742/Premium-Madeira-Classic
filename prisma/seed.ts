@@ -3,16 +3,16 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const products = [
-  { serialNumber: "SN-TV-001", productName: "Samsung QLED 4K Smart TV", category: "Television" },
-  { serialNumber: "SN-LP-002", productName: "Dell XPS 15 Laptop", category: "Laptop" },
-  { serialNumber: "SN-MB-003", productName: "iPhone 16 Pro Max", category: "Mobile" },
-  { serialNumber: "SN-TB-004", productName: "iPad Air M2", category: "Tablet" },
-  { serialNumber: "SN-AU-005", productName: "Sony WH-1000XM5 Headphones", category: "Audio" },
-  { serialNumber: "SN-CM-006", productName: "Canon EOS R6 Mark II", category: "Camera" },
-  { serialNumber: "SN-AP-007", productName: "Dyson V15 Detect Vacuum", category: "Appliances" },
-  { serialNumber: "SN-AC-008", productName: "Apple Watch Ultra 2", category: "Accessories" },
-  { serialNumber: "SN-EL-009", productName: "Samsung Galaxy S24 Ultra", category: "Mobile" },
-  { serialNumber: "SN-LP-010", productName: "MacBook Pro 16-inch M3 Max", category: "Laptop" },
+  { serialNumber: "PMC-BD-001", productName: "Classic Walnut King Bed", category: "Bed" },
+  { serialNumber: "PMC-SF-002", productName: "Madeira 3-Seater Teak Sofa", category: "Sofa" },
+  { serialNumber: "PMC-DT-003", productName: "Solid Oak 6-Seater Dining Table", category: "Dining Table" },
+  { serialNumber: "PMC-DC-004", productName: "Sheesham Upholstered Dining Chair", category: "Dining Chair" },
+  { serialNumber: "PMC-CT-005", productName: "Live-Edge Acacia Coffee Table", category: "Coffee Table" },
+  { serialNumber: "PMC-WR-006", productName: "Heritage 4-Door Mahogany Wardrobe", category: "Wardrobe" },
+  { serialNumber: "PMC-DR-007", productName: "Rosewood 6-Drawer Dresser", category: "Dresser" },
+  { serialNumber: "PMC-NS-008", productName: "Teak Bedside Nightstand", category: "Nightstand" },
+  { serialNumber: "PMC-BS-009", productName: "Tall Oak Bookshelf", category: "Bookshelf" },
+  { serialNumber: "PMC-TV-010", productName: "Walnut Floating TV Unit", category: "TV Unit" },
 ];
 
 async function main() {

@@ -26,6 +26,12 @@ export function ProductForm({ product }: ProductFormProps) {
 
   const isEditing = !!product;
 
+  // Keep a legacy category selectable so editing doesn't silently drop it
+  const categoryOptions =
+    product?.category && !CATEGORIES.includes(product.category)
+      ? [product.category, ...CATEGORIES]
+      : CATEGORIES;
+
   function handleImageSelect(file: File) {
     setImageFile(file);
     setRemoveImage(false);
@@ -146,7 +152,7 @@ export function ProductForm({ product }: ProductFormProps) {
                   required
                 >
                   <option value="" disabled>Select category</option>
-                  {CATEGORIES.map((cat) => (
+                  {categoryOptions.map((cat) => (
                     <option key={cat} value={cat}>{cat}</option>
                   ))}
                 </Select>
