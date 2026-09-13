@@ -1,0 +1,52 @@
+import * as React from "react";
+import { cn } from "@/lib/utils";
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  variant?:
+    | "default"
+    | "destructive"
+    | "outline"
+    | "secondary"
+    | "ghost"
+    | "link";
+  size?: "default" | "sm" | "lg" | "icon";
+}
+
+const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, variant = "default", size = "default", ...props }, ref) => {
+    return (
+      <button
+        className={cn(
+          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg text-sm font-medium tracking-wide transition-all duration-300 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2 focus-visible:ring-offset-cream disabled:pointer-events-none disabled:opacity-40 active:scale-[0.97]",
+          {
+            "bg-stone-900 text-stone-50 shadow-sm hover:bg-stone-800 hover:shadow-md dark:bg-stone-100 dark:text-stone-900 dark:hover:bg-stone-200":
+              variant === "default",
+            "bg-red-600/90 text-white shadow-sm hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600":
+              variant === "destructive",
+            "border border-stone-200 bg-white/80 text-stone-700 shadow-sm backdrop-blur-sm hover:bg-stone-50 hover:text-stone-900 hover:border-stone-300 hover:shadow-md dark:border-stone-700 dark:bg-stone-900/80 dark:text-stone-300 dark:hover:bg-stone-800 dark:hover:text-stone-100":
+              variant === "outline",
+            "bg-stone-100 text-stone-700 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700":
+              variant === "secondary",
+            "text-stone-600 hover:bg-stone-100 hover:text-stone-900 dark:text-stone-400 dark:hover:bg-stone-800 dark:hover:text-stone-100":
+              variant === "ghost",
+            "text-stone-700 underline-offset-4 hover:underline dark:text-stone-300":
+              variant === "link",
+          },
+          {
+            "h-11 px-5 py-2.5": size === "default",
+            "h-9 rounded-md px-3.5 text-xs": size === "sm",
+            "h-12 rounded-xl px-8 text-base": size === "lg",
+            "h-10 w-10": size === "icon",
+          },
+          className
+        )}
+        ref={ref}
+        {...props}
+      />
+    );
+  }
+);
+Button.displayName = "Button";
+
+export { Button };
