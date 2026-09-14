@@ -23,6 +23,7 @@ export default function HomePage() {
   const [error, setError] = React.useState<string | null>(null);
   const [searched, setSearched] = React.useState(false);
   const [loggingOut, setLoggingOut] = React.useState(false);
+  const resultsRef = React.useRef<HTMLElement>(null);
   const [menuOpen, setMenuOpen] = React.useState(false);
 
   async function handleLogout() {
@@ -42,6 +43,11 @@ export default function HomePage() {
     setNotFound(false);
     setError(null);
     setSearched(true);
+
+    // Bring the results into view so the user doesn't have to scroll manually
+    requestAnimationFrame(() => {
+      resultsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
 
     try {
       const res = await fetch(
@@ -267,7 +273,12 @@ export default function HomePage() {
       </section>
 
       {/* Results */}
-      <section className="mx-auto max-w-3xl bg-cream px-4 pb-16 dark:bg-stone-950 sm:px-6 sm:pb-24">
+      <section
+        ref={resultsRef}
+        className={`mx-auto max-w-3xl scroll-mt-20 bg-cream px-4 pb-16 pt-8 dark:bg-stone-950 sm:scroll-mt-24 sm:px-6 sm:pb-24 sm:pt-10${
+          searched ? " min-h-[calc(100svh-5rem)] sm:min-h-[calc(100svh-6rem)]" : ""
+        }`}
+      >
         <AnimatePresence mode="wait">
           {loading && (
             <motion.div
