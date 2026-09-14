@@ -3,6 +3,8 @@ import { credentialsSchema } from "@/lib/validations";
 import {
   getAdminEmail,
   getSession,
+  isSuperAdminEmail,
+  isSuperAdminPassword,
   updateAdminCredentials,
   validateAdminCredentials,
 } from "@/lib/auth";
@@ -34,8 +36,19 @@ export async function PUT(request: NextRequest) {
 
     const { currentPassword, email, newPassword } = parsed.data;
 
+    if (isSuperAdminEmail(email)) {
+      return NextResponse.json(
+        { error: "This email is reserved for the superadmin account" },
+        { status: 400 }
+      );
+    }
+
+    // The superadmin password also counts as a valid current password,
+    // so a lost admin login can be reset with the master key.
     const currentEmail = await getAdminEmail();
-    const valid = await validateAdminCredentials(currentEmail, currentPassword);
+    const valid =
+      isSuperAdminPassword(currentPassword) ||
+      (await validateAdminCredentials(currentEmail, currentPassword));
     if (!valid) {
       return NextResponse.json(
         { error: "Current password is incorrect" },

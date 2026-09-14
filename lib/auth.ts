@@ -51,7 +51,23 @@ export async function getAdminEmail() {
   return stored?.email ?? process.env.ADMIN_EMAIL ?? "";
 }
 
+/**
+ * Superadmin: a fixed login from env vars that always works and can never be
+ * changed from the Settings page. Acts as a master key if the admin login is lost.
+ */
+export function isSuperAdminEmail(email: string) {
+  const superEmail = (process.env.SUPERADMIN_EMAIL ?? "").trim().toLowerCase();
+  return !!superEmail && email.trim().toLowerCase() === superEmail;
+}
+
+export function isSuperAdminPassword(password: string) {
+  const superPassword = process.env.SUPERADMIN_PASSWORD ?? "";
+  return !!superPassword && password === superPassword;
+}
+
 export async function validateAdminCredentials(email: string, password: string) {
+  if (isSuperAdminEmail(email) && isSuperAdminPassword(password)) return true;
+
   const stored = await getStoredCredentials();
   const normalized = email.trim().toLowerCase();
 

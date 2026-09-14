@@ -236,6 +236,10 @@ export default function SettingsPage() {
                 <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-warm-accent" />
                 Keep the new password somewhere safe. There is no reset link.
               </li>
+              <li className="flex gap-3">
+                <span className="mt-1 h-1.5 w-1.5 shrink-0 rounded-full bg-warm-accent" />
+                The superadmin login is fixed and cannot be changed here. Its password also works as the current password if the admin login is ever lost.
+              </li>
             </ul>
           </CardContent>
         </Card>
