@@ -33,6 +33,7 @@
   --color-warm-accent-muted: var(--warm-accent-muted);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-brand-serif), "Cormorant Garamond", Georgia, serif;
 }
 
 @media (prefers-color-scheme: dark) {

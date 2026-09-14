@@ -1,11 +1,13 @@
 "use client";
 
 import * as React from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Logo } from "@/components/brand/logo";
 import { formatDate } from "@/lib/utils";
 import type { Product } from "@/types";
 
@@ -82,9 +84,10 @@ export default function HomePage() {
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-xl">
         <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:h-16 sm:px-6">
-          <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.18em] text-white drop-shadow-sm sm:text-sm sm:tracking-[0.2em]">
-            Premium Madeira Classic
-          </span>
+          <Link href="/" aria-label="Premium Madeira Classic home" className="drop-shadow-sm">
+            <Logo variant="horizontal" tone="light" size="sm" className="sm:hidden" />
+            <Logo variant="horizontal" tone="light" size="md" className="hidden sm:flex" />
+          </Link>
 
           {/* Desktop nav */}
           <div className="hidden items-center gap-5 sm:flex">
@@ -460,9 +463,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-stone-200/40 bg-cream dark:border-stone-800/40 dark:bg-stone-950">
         <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 px-4 py-6 text-center sm:flex-row sm:justify-between sm:px-6 sm:py-8 sm:text-left">
-          <span className="text-xs font-medium uppercase tracking-[0.15em] text-stone-400 dark:text-stone-500">
-            Premium Madeira Classic
-          </span>
+          <Logo variant="horizontal" tone="dark" size="sm" className="opacity-80" />
           <span className="text-xs text-stone-300 dark:text-stone-600">
             &copy; {new Date().getFullYear()} Premium Madeira Classic. All rights reserved.
           </span>

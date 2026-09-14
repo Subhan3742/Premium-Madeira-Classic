@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "motion/react";
+import { Logo } from "@/components/brand/logo";
 
 const ease = [0.22, 1, 0.36, 1] as const;
 
@@ -88,22 +89,15 @@ export default function AdminLoginPage() {
       >
         {/* Brand */}
         <div className="mb-8 text-center sm:mb-10">
-          <motion.p
-            className="text-[10px] font-semibold uppercase tracking-[0.35em] text-white/60 sm:text-xs"
+          <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease }}
           >
-            Premium Madeira Classic
-          </motion.p>
-          <motion.div
-            className="mx-auto mt-4 h-px w-10 bg-gradient-to-r from-transparent via-warm-accent-light to-transparent"
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.8, delay: 0.3, ease }}
-          />
+            <Logo variant="stacked" tone="light" size="md" />
+          </motion.div>
           <motion.h1
-            className="mt-5 text-[2rem] font-light leading-tight tracking-tight text-white drop-shadow-md sm:text-4xl"
+            className="mt-7 text-2xl font-light leading-tight tracking-tight text-white/90 drop-shadow-md sm:text-3xl"
             initial={{ opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease }}

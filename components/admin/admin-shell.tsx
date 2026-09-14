@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Logo } from "@/components/brand/logo";
 
 const navItems = [
   { href: "/", label: "Search" },
@@ -53,9 +54,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-8">
             <Link
               href="/admin/dashboard"
-              className="whitespace-nowrap text-sm font-semibold uppercase tracking-[0.15em] text-stone-800 transition-colors hover:text-stone-600 dark:text-stone-200 dark:hover:text-stone-400"
+              aria-label="Premium Madeira Classic dashboard"
+              className="transition-opacity hover:opacity-80"
             >
-              Premium Madeira Classic
+              <Logo variant="horizontal" tone="dark" size="sm" />
             </Link>
             <nav className="hidden items-center gap-1 sm:flex">
               {navItems.map((item) => (
