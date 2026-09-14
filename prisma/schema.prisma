@@ -20,3 +20,10 @@ model Product {
   @@index([category])
   @@index([createdAt])
 }
+
+model AdminCredential {
+  id           String   @id @default("admin")
+  email        String   @unique
+  passwordHash String
+  updatedAt    DateTime @updatedAt
+}

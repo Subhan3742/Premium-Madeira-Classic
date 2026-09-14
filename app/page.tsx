@@ -12,6 +12,7 @@ import type { Product } from "@/types";
 const headerLinks = [
   { href: "/admin/dashboard", label: "Dashboard" },
   { href: "/admin/products", label: "Products" },
+  { href: "/admin/settings", label: "Settings" },
 ];
 
 export default function HomePage() {

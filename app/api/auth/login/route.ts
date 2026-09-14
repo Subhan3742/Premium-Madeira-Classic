@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
 
     const { email, password } = parsed.data;
 
-    if (!validateAdminCredentials(email, password)) {
+    if (!(await validateAdminCredentials(email, password))) {
       return NextResponse.json(
         { error: "Invalid email or password" },
         { status: 401 }
@@ -35,7 +35,8 @@ export async function POST(request: NextRequest) {
     });
 
     return response;
-  } catch {
+  } catch (err) {
+    console.error(`[${request.method} ${request.nextUrl.pathname}]`, err);
     return NextResponse.json(
       { error: "Something went wrong" },
       { status: 500 }

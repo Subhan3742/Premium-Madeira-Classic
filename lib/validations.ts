@@ -76,3 +76,23 @@ export const CATEGORIES = [
   "Kids Furniture",
   "Other",
 ];
+
+export const credentialsSchema = z
+  .object({
+    currentPassword: z.string().min(1, "Current password is required"),
+    email: z.string().email("Invalid email").transform((v) => v.trim()),
+    newPassword: z
+      .string()
+      .max(100, "Password is too long")
+      .optional()
+      .or(z.literal("")),
+    confirmPassword: z.string().optional().or(z.literal("")),
+  })
+  .refine(
+    (d) => !d.newPassword || d.newPassword.length >= 8,
+    { message: "New password must be at least 8 characters", path: ["newPassword"] }
+  )
+  .refine(
+    (d) => !d.newPassword || d.newPassword === d.confirmPassword,
+    { message: "Passwords do not match", path: ["confirmPassword"] }
+  );
