@@ -23,6 +23,7 @@ export default function HomePage() {
   const [error, setError] = React.useState<string | null>(null);
   const [searched, setSearched] = React.useState(false);
   const [loggingOut, setLoggingOut] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
 
   async function handleLogout() {
     setLoggingOut(true);
@@ -72,11 +73,13 @@ export default function HomePage() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/20 backdrop-blur-xl">
-        <div className="mx-auto flex h-12 max-w-6xl items-center justify-center px-4 sm:h-16 sm:justify-between sm:px-6">
-          <span className="whitespace-nowrap text-xs font-semibold uppercase tracking-[0.15em] text-white drop-shadow-sm sm:text-sm sm:tracking-[0.2em]">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-black/30 backdrop-blur-xl">
+        <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4 sm:h-16 sm:px-6">
+          <span className="whitespace-nowrap text-[11px] font-semibold uppercase tracking-[0.18em] text-white drop-shadow-sm sm:text-sm sm:tracking-[0.2em]">
             Premium Madeira Classic
           </span>
+
+          {/* Desktop nav */}
           <div className="hidden items-center gap-5 sm:flex">
             {headerLinks.map((link) => (
               <a
@@ -95,25 +98,58 @@ export default function HomePage() {
               {loggingOut ? "..." : "Logout"}
             </button>
           </div>
-        </div>
-        <div className="flex items-center justify-center gap-5 pb-2.5 sm:hidden">
-          {headerLinks.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="text-[11px] font-medium uppercase tracking-wider text-white/60 transition-colors hover:text-white"
-            >
-              {link.label}
-            </a>
-          ))}
+
+          {/* Mobile menu toggle */}
           <button
-            onClick={handleLogout}
-            disabled={loggingOut}
-            className="rounded-md border border-white/20 px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider text-white/80 transition-colors hover:border-white/40 hover:text-white disabled:opacity-50"
+            type="button"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+            className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md text-white/80 transition-colors hover:text-white sm:hidden"
           >
-            {loggingOut ? "..." : "Logout"}
+            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+              {menuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 7h16M4 12h16M4 17h16" />
+              )}
+            </svg>
           </button>
         </div>
+
+        {/* Mobile menu panel */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.nav
+              key="mobile-menu"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+              className="overflow-hidden border-t border-white/10 sm:hidden"
+            >
+              <div className="flex flex-col px-4 py-2">
+                {headerLinks.map((link) => (
+                  <a
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => setMenuOpen(false)}
+                    className="py-3 text-xs font-medium uppercase tracking-widest text-white/70 transition-colors hover:text-white"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+                <button
+                  onClick={handleLogout}
+                  disabled={loggingOut}
+                  className="mt-1 mb-2 w-full rounded-md border border-white/20 py-2.5 text-xs font-medium uppercase tracking-widest text-white/80 transition-colors hover:border-white/40 hover:text-white disabled:opacity-50"
+                >
+                  {loggingOut ? "..." : "Logout"}
+                </button>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
       </header>
 
       {/* Hero with video background */}
@@ -130,19 +166,19 @@ export default function HomePage() {
         </video>
         <div className="absolute inset-0 bg-black/40 z-[1]" />
 
-        <div className="relative z-10 mx-auto max-w-2xl px-4 pt-24 text-center sm:px-6 sm:pt-16">
+        <div className="relative z-10 mx-auto w-full max-w-2xl px-5 pt-20 pb-10 text-center sm:px-6 sm:pt-16 sm:pb-0">
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            <p className="mb-4 text-xs font-semibold uppercase tracking-[0.3em] text-white/60">
+            <p className="mb-3 text-[10px] font-semibold uppercase tracking-[0.3em] text-white/60 sm:mb-4 sm:text-xs">
               Product Verification
             </p>
           </motion.div>
 
           <motion.h1
-            className="text-4xl font-light leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl drop-shadow-md"
+            className="text-[2.35rem] font-light leading-[1.1] tracking-tight text-white drop-shadow-md sm:text-5xl sm:leading-tight lg:text-6xl"
             initial={{ opacity: 0, y: 28 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
@@ -152,7 +188,7 @@ export default function HomePage() {
           </motion.h1>
 
           <motion.p
-            className="mx-auto mt-5 max-w-md text-base leading-relaxed text-white/70"
+            className="mx-auto mt-4 max-w-md text-[15px] leading-relaxed text-white/70 sm:mt-5 sm:text-base"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
@@ -162,18 +198,18 @@ export default function HomePage() {
           </motion.p>
 
           <motion.div
-            className="mt-10"
+            className="mt-8 sm:mt-10"
             initial={{ opacity: 0, y: 20, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
             <form
               onSubmit={handleSearch}
-              className="relative mx-auto max-w-lg"
+              className="relative mx-auto w-full max-w-lg"
             >
               <div className="relative flex items-center rounded-2xl border border-stone-200/80 bg-white/90 shadow-lg shadow-stone-200/40 backdrop-blur-md transition-all duration-500 focus-within:border-stone-300 focus-within:shadow-xl focus-within:shadow-stone-200/50 dark:border-stone-700/60 dark:bg-stone-900/90 dark:shadow-stone-900/40 dark:focus-within:border-stone-600">
                 <svg
-                  className="ml-5 h-5 w-5 flex-shrink-0 text-stone-300 dark:text-stone-600"
+                  className="ml-4 h-5 w-5 flex-shrink-0 text-stone-300 dark:text-stone-600 sm:ml-5"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -189,7 +225,7 @@ export default function HomePage() {
                   placeholder="Enter serial number..."
                   value={serialNumber}
                   onChange={(e) => setSerialNumber(e.target.value)}
-                  className="h-14 min-w-0 flex-1 bg-transparent px-3 text-base text-stone-800 placeholder:text-stone-400 focus:outline-none sm:h-16 sm:px-4 sm:text-lg dark:text-stone-100 dark:placeholder:text-stone-500"
+                  className="h-14 w-0 min-w-0 flex-1 bg-transparent px-3 text-base text-stone-800 placeholder:text-stone-400 focus:outline-none sm:h-16 sm:px-4 sm:text-lg dark:text-stone-100 dark:placeholder:text-stone-500"
                 />
                 <button
                   type="submit"
@@ -209,7 +245,7 @@ export default function HomePage() {
           {/* Scroll indicator */}
           {!searched && (
             <motion.div
-              className="mt-16 flex flex-col items-center gap-2"
+              className="mt-16 hidden flex-col items-center gap-2 sm:flex"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1.2, duration: 0.8 }}
@@ -453,7 +489,7 @@ function DetailItem({
             : highlight === "danger"
               ? "text-sm font-semibold text-red-600 dark:text-red-400"
               : "text-sm font-medium text-stone-800 dark:text-stone-100"
-        }${mono ? " font-mono" : ""}`}
+        }${mono ? " font-mono break-all" : ""}`}
       >
         {value}
       </p>
